@@ -1,0 +1,12 @@
+{
+  "name": "skill-pack",
+  "description": "Agent skill pack for Claude/AI assistant — SKILL.md + validator + examples",
+  "language": "python",
+  "files": [
+    "SKILL.md", "scripts/validate_skill.py", "references/checklist.md",
+    "examples/example-request.md", "examples/example-output.md",
+    ".github/workflows/ci.yml", ".gitignore", "LICENSE", "README.md"
+  ],
+  "postCreate": [],
+  "gitignore": true
+}
