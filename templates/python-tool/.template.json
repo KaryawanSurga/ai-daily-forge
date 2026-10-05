@@ -1,0 +1,14 @@
+{
+  "name": "python-tool",
+  "description": "Zero-dependency Python CLI tool, uv-managed, PyPI-publishable",
+  "language": "python",
+  "files": [
+    "pyproject.toml", "src/{{SNAKE}}/__init__.py", "src/{{SNAKE}}/__main__.py",
+    "src/{{SNAKE}}/cli.py", "src/{{SNAKE}}/core.py",
+    "tests/test_core.py", "tests/test_cli.py",
+    ".github/workflows/ci.yml", ".github/workflows/publish.yml",
+    ".gitignore", "LICENSE", "README.md"
+  ],
+  "postCreate": ["uv sync"],
+  "gitignore": true
+}
