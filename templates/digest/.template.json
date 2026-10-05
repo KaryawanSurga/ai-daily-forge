@@ -1,0 +1,12 @@
+{
+  "name": "digest",
+  "description": "Self-updating daily digest bot — cron-driven, commits real data every day",
+  "language": "javascript",
+  "files": [
+    "package.json", "src/collect.mjs", "src/render.mjs", "src/index.mjs",
+    "test/collect.test.mjs", "test/render.test.mjs", "data/.gitkeep",
+    ".github/workflows/digest.yml", ".gitignore", "LICENSE", "README.md"
+  ],
+  "postCreate": ["npm install"],
+  "gitignore": true
+}

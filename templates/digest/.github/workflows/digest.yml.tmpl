@@ -1,0 +1,47 @@
+name: Daily Digest
+
+on:
+  schedule:
+    - cron: "0 22 * * *"  # Every day at 22:00 UTC = 05:00 WIB next day
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm test
+
+      - name: Generate digest
+        run: node src/index.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # IMPORTANT: Commits only count toward your contribution graph if the
+      # author email is verified on your GitHub account. Set these secrets
+      # in your repo settings (Settings > Secrets and variables > Actions):
+      #   GIT_AUTHOR_NAME  → your display name
+      #   GIT_AUTHOR_EMAIL → the email connected to your GitHub account
+      # Without these secrets, the commit author defaults to
+      # `github-actions[bot]`, which does NOT appear on your profile graph.
+      - name: Commit and push
+        run: |
+          git config user.name "${{ secrets.GIT_AUTHOR_NAME || 'github-actions[bot]' }}"
+          git config user.email "${{ secrets.GIT_AUTHOR_EMAIL || 'github-actions[bot]@users.noreply.github.com' }}"
+          git add data/ digests/ README.md
+          git diff --quiet && git diff --staged --quiet && echo "Nothing to commit" || {
+            git commit -m "feat: daily digest [skip ci]"
+            git push
+          }
