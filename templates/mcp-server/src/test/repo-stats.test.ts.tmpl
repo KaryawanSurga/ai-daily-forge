@@ -1,0 +1,65 @@
+import { describe, it, before, after } from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { getRepoStats } from '../tools/repo-stats.js';
+
+describe('getRepoStats', () => {
+  let tmpDir: string;
+
+  before(() => {
+    tmpDir = mkdtempSync(join(tmpdir(), 'mcp-test-'));
+    mkdirSync(join(tmpDir, 'subdir'));
+    writeFileSync(join(tmpDir, 'readme.md'), '# Hello\n\nWorld.\n');
+    writeFileSync(join(tmpDir, 'index.ts'), 'const x = 1;\nconst y = 2;\n');
+    writeFileSync(join(tmpDir, 'app.ts'), 'console.log("hello");\n');
+    writeFileSync(join(tmpDir, 'data.json'), '{"a":1,"b":2}\n');
+    writeFileSync(join(tmpDir, 'subdir', 'deep.ts'), 'export const z = 3;\n');
+  });
+
+  after(() => {
+    // rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  it('counts all files and lines in a directory', async () => {
+    const result = await getRepoStats(tmpDir);
+    assert.equal(result.totalFiles, 5);
+    assert.equal(result.totalLines, 8);
+    assert.ok(result.byExtension['.md']);
+    assert.equal(result.byExtension['.md'].files, 1);
+    assert.equal(result.byExtension['.ts'].files, 3);
+    assert.equal(result.byExtension['.json'].files, 1);
+    assert.equal(result.extensionFilter, null);
+  });
+
+  it('filters by extension', async () => {
+    const result = await getRepoStats(tmpDir, ['.ts']);
+    assert.equal(result.totalFiles, 3);
+    assert.equal(Object.keys(result.byExtension).length, 1);
+    assert.ok(result.byExtension['.ts']);
+    assert.deepEqual(result.extensionFilter, ['.ts']);
+  });
+
+  it('handles non-existent directory', async () => {
+    await assert.rejects(
+      () => getRepoStats('/nonexistent/path'),
+      /Not a directory|ENOENT/,
+    );
+  });
+
+  it('handles files instead of directory', async () => {
+    await assert.rejects(
+      () => getRepoStats(join(tmpDir, 'readme.md')),
+      /Not a directory/,
+    );
+  });
+
+  it('counts lines accurately', async () => {
+    const result = await getRepoStats(tmpDir);
+    // readme.md has 4 lines: \n# Hello\n\nWorld.\n = 3 lines + trailing newline
+    assert.equal(result.byExtension['.md'].lines, 3);
+    // index.ts: 3 lines
+    assert.equal(result.byExtension['.ts'].lines, 4);
+  });
+});

@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+import { McpServer } from '@modelcontextprotocol/server';
+import { StdioServerTransport } from '@modelcontextprotocol/server/stdio';
+import * as z from 'zod/v4';
+import { getRepoStats } from './tools/repo-stats.js';
+
+const server = new McpServer({
+  name: '{{SLUG}}',
+  version: '0.1.0',
+});
+
+server.registerTool(
+  'repo_stats',
+  {
+    description:
+      'Analyze a directory and return file statistics: count, total lines, and breakdown by extension.',
+    inputSchema: z.object({
+      path: z
+        .string()
+        .describe('Absolute or relative path to the directory to analyze'),
+      extensions: z
+        .array(z.string())
+        .optional()
+        .describe(
+          'Optional filter: only count files with these extensions (e.g. [".ts", ".js"])',
+        ),
+    }),
+  },
+  async ({ path: dirPath, extensions }) => {
+    try {
+      const stats = await getRepoStats(dirPath, extensions);
+      return {
+        content: [{ type: 'text', text: JSON.stringify(stats, null, 2) }],
+      };
+    } catch (err) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error: ${err instanceof Error ? err.message : String(err)}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  },
+);
+
+async function main() {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+}
+
+main().catch((err) => {
+  console.error('Fatal:', err instanceof Error ? err.message : err);
+  process.exit(1);
+});
+
+process.on('SIGINT', async () => {
+  console.error('Shutting down...');
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => process.exit(0));

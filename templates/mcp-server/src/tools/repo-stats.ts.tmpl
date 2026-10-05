@@ -1,0 +1,78 @@
+import { readdir, readFile, stat } from 'node:fs/promises';
+import { extname, resolve, join } from 'node:path';
+
+export interface RepoStats {
+  totalFiles: number;
+  totalLines: number;
+  byExtension: Record<string, { files: number; lines: number }>;
+  path: string;
+  extensionFilter: string[] | null;
+}
+
+export async function getRepoStats(
+  dirPath: string,
+  extensions?: string[],
+): Promise<RepoStats> {
+  const root = resolve(dirPath);
+
+  const rootStat = await stat(root);
+  if (!rootStat.isDirectory()) {
+    throw new Error(`Not a directory: ${dirPath}`);
+  }
+
+  const extFilter = extensions?.length
+    ? new Set(extensions.map((e) => (e.startsWith('.') ? e : `.${e}`)))
+    : null;
+
+  const stats: RepoStats = {
+    totalFiles: 0,
+    totalLines: 0,
+    byExtension: {},
+    path: root,
+    extensionFilter: extensions ?? null,
+  };
+
+  const stack = [root];
+  while (stack.length > 0) {
+    const current = stack.pop()!;
+    let entries;
+    try {
+      entries = await readdir(current, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+    for (const entry of entries) {
+      const fullPath = join(current, entry.name);
+      if (entry.isDirectory()) {
+        if (
+          entry.name === 'node_modules' ||
+          entry.name === '.git' ||
+          entry.name === '.venv'
+        )
+          continue;
+        stack.push(fullPath);
+      } else if (entry.isFile()) {
+        const ext = extname(entry.name).toLowerCase();
+        if (extFilter && !extFilter.has(ext)) continue;
+
+        let lines = 0;
+        try {
+          const content = await readFile(fullPath, 'utf8');
+          lines = content.split(/\r?\n/).length;
+        } catch {
+          lines = 0;
+        }
+
+        stats.totalFiles++;
+        stats.totalLines += lines;
+        if (!stats.byExtension[ext]) {
+          stats.byExtension[ext] = { files: 0, lines: 0 };
+        }
+        stats.byExtension[ext].files++;
+        stats.byExtension[ext].lines += lines;
+      }
+    }
+  }
+
+  return stats;
+}

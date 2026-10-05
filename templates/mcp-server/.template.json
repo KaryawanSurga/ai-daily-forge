@@ -1,0 +1,12 @@
+{
+  "name": "mcp-server",
+  "description": "Production-ready MCP server (TypeScript, stdio, npm-publishable)",
+  "language": "typescript",
+  "files": [
+    "package.json", "tsconfig.json", "src/index.ts", "src/tools/repo-stats.ts",
+    "src/test/repo-stats.test.ts", ".github/workflows/ci.yml",
+    ".github/workflows/publish.yml", ".gitignore", "LICENSE", "README.md"
+  ],
+  "postCreate": ["npm install", "npm run build"],
+  "gitignore": true
+}
