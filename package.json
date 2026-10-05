@@ -1,0 +1,49 @@
+{
+  "name": "ai-daily-forge",
+  "version": "1.0.0",
+  "description": "Scaffold, audit, and track daily AI project work — a zero-dependency CLI for shipping one useful project a day.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "author": "KaryawanSurga",
+  "homepage": "https://github.com/KaryawanSurga/ai-daily-forge#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KaryawanSurga/ai-daily-forge.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KaryawanSurga/ai-daily-forge/issues"
+  },
+  "keywords": [
+    "ai",
+    "github",
+    "developer-tools",
+    "cli",
+    "mcp",
+    "scaffold",
+    "productivity",
+    "open-source",
+    "daily-commit",
+    "forge"
+  ],
+  "bin": {
+    "forge": "bin/forge.mjs",
+    "ai-daily-forge": "bin/forge.mjs"
+  },
+  "files": [
+    "bin",
+    "templates",
+    "docs",
+    "ideas.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "cd test && node --test",
+    "doctor": "node bin/forge.mjs doctor",
+    "audit": "node bin/forge.mjs audit .",
+    "templates": "node bin/forge.mjs templates"
+  }
+}
