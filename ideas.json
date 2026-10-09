@@ -8,7 +8,7 @@
     "stars": 4,
     "registry": "npm",
     "oneLiner": "Measure how many tokens each MCP server's tool schemas consume; flag bloat before it fills the context window.",
-    "status": "todo"
+    "status": "done"
   },
   {
     "slug": "mcp-repo-map",
@@ -19,7 +19,7 @@
     "stars": 5,
     "registry": "npm",
     "oneLiner": "Compact structural map of any repo — symbols, call graph, entry points — for agent navigation without reading every file.",
-    "status": "todo"
+    "status": "done"
   },
   {
     "slug": "mcp-secret-scan",
@@ -30,7 +30,7 @@
     "stars": 3,
     "registry": "npm",
     "oneLiner": "Scan staged git diffs for secrets, API keys, and tokens before commit; agent-callable as a gating check.",
-    "status": "todo"
+    "status": "done"
   },
   {
     "slug": "mcp-sqlite-explorer",
@@ -74,7 +74,7 @@
     "stars": 3,
     "registry": "npm",
     "oneLiner": "Exact token counts for many model tokenizers, offline, with breakdown by text/tool/context sections.",
-    "status": "todo"
+    "status": "done"
   },
   {
     "slug": "mcp-env-doctor",
@@ -96,7 +96,7 @@
     "stars": 2,
     "registry": "npm",
     "oneLiner": "Query, filter, and transform large JSON/JSONL with jq-like expressions without loading everything into context.",
-    "status": "todo"
+    "status": "done"
   },
   {
     "slug": "mcp-log-tail",
@@ -107,7 +107,7 @@
     "stars": 3,
     "registry": "npm",
     "oneLiner": "Tail, filter, and grep log files; extract patterns and return structured summaries instead of raw text.",
-    "status": "todo"
+    "status": "done"
   },
   {
     "slug": "mcp-pdf-lens",
@@ -151,7 +151,7 @@
     "stars": 4,
     "registry": "npm",
     "oneLiner": "Dependency risk check — outdated, license, CVE coverage for npm and pip packages, callable from any MCP client.",
-    "status": "todo"
+    "status": "done"
   },
   {
     "slug": "mcp-openapi-bridge",
@@ -162,7 +162,7 @@
     "stars": 5,
     "registry": "npm",
     "oneLiner": "Turn any OpenAPI 3.x spec into callable MCP tools at runtime — no coding required.",
-    "status": "todo"
+    "status": "done"
   },
   {
     "slug": "mcp-web-snapshot",
@@ -173,7 +173,7 @@
     "stars": 5,
     "registry": "npm",
     "oneLiner": "Fetch any URL and return a clean, readable text+markdown snapshot optimized for LLM consumption.",
-    "status": "todo"
+    "status": "done"
   },
   {
     "slug": "mcp-memory-files",
