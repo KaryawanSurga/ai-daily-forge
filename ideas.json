@@ -41,7 +41,7 @@
     "stars": 3,
     "registry": "npm",
     "oneLiner": "Read-only SQLite explorer with schema introspection, safe query sandbox, and result summarization.",
-    "status": "todo"
+    "status": "done"
   },
   {
     "slug": "mcp-cron",
